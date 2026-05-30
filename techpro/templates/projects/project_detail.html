@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ project.title }} — TechPro Engineering{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container page-header-content">
+    <nav aria-label="breadcrumb" class="mb-3"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li><li class="breadcrumb-item"><a href="{% url 'projects' %}">Projects</a></li><li class="breadcrumb-item active">{{ project.title }}</li></ol></nav>
+    <h1 class="page-title">{{ project.title }}</h1>
+    <div class="d-flex gap-3 mt-2 flex-wrap">
+      <span class="status-badge status-{{ project.status }}">{{ project.get_status_display }}</span>
+      {% if project.location %}<span class="text-muted small"><i class="bi bi-geo-alt me-1"></i>{{ project.location }}</span>{% endif %}
+      {% if project.client %}<span class="text-muted small"><i class="bi bi-person me-1"></i>{{ project.client }}</span>{% endif %}
+    </div>
+  </div>
+</section>
+
+<section style="padding:80px 0;">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-8">
+        {% if project.cover_image %}
+        <img src="{{ project.cover_image.url }}" alt="{{ project.title }}" class="img-fluid mb-4" style="border-radius:var(--radius-lg);width:100%;max-height:450px;object-fit:cover;border:1px solid var(--border);"/>
+        {% endif %}
+
+        {% if project.before_image and project.after_image %}
+        <div class="row g-3 mb-4">
+          <div class="col-6">
+            <div class="position-relative">
+              <img src="{{ project.before_image.url }}" class="img-fluid" style="border-radius:var(--radius);width:100%;height:220px;object-fit:cover;"/>
+              <span class="project-badge" style="position:absolute;bottom:12px;left:12px;top:auto;">Before</span>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="position-relative">
+              <img src="{{ project.after_image.url }}" class="img-fluid" style="border-radius:var(--radius);width:100%;height:220px;object-fit:cover;"/>
+              <span class="project-badge" style="position:absolute;bottom:12px;left:12px;top:auto;">After</span>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        {% if project.images.all %}
+        <div class="row g-3 mb-4">
+          {% for img in project.images.all %}
+          <div class="col-4">
+            <img src="{{ img.image.url }}" class="img-fluid" style="border-radius:var(--radius);width:100%;height:160px;object-fit:cover;cursor:pointer;" {% if img.caption %}title="{{ img.caption }}"{% endif %}/>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <div style="color:#c0c0c0;line-height:1.85;">{{ project.description|linebreaks }}</div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card-dark p-4">
+          <h5 style="font-family:var(--font-display);color:#fff;margin-bottom:20px;letter-spacing:0.05em;">Project Details</h5>
+          <table style="width:100%;">
+            {% if project.category %}<tr><td class="text-muted small pb-3">Category</td><td class="text-end small fw-600" style="color:#e0e0e0;">{{ project.category.name }}</td></tr>{% endif %}
+            <tr><td class="text-muted small pb-3">Status</td><td class="text-end"><span class="status-badge status-{{ project.status }}">{{ project.get_status_display }}</span></td></tr>
+            {% if project.client %}<tr><td class="text-muted small pb-3">Client</td><td class="text-end small" style="color:#e0e0e0;">{{ project.client }}</td></tr>{% endif %}
+            {% if project.location %}<tr><td class="text-muted small pb-3">Location</td><td class="text-end small" style="color:#e0e0e0;">{{ project.location }}</td></tr>{% endif %}
+            {% if project.start_date %}<tr><td class="text-muted small pb-3">Started</td><td class="text-end small" style="color:#e0e0e0;">{{ project.start_date|date:"M Y" }}</td></tr>{% endif %}
+            {% if project.end_date %}<tr><td class="text-muted small">Completed</td><td class="text-end small" style="color:#e0e0e0;">{{ project.end_date|date:"M Y" }}</td></tr>{% endif %}
+          </table>
+          <hr style="border-color:var(--border);margin:20px 0;">
+          <a href="{% url 'contact' %}" class="btn-glow d-block text-center mb-2">Start Similar Project</a>
+          <a href="https://wa.me/{{ COMPANY_WHATSAPP|cut:'+' }}" class="btn-outline-custom d-block text-center" target="_blank"><i class="bi bi-whatsapp me-2"></i>WhatsApp Us</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if related %}
+<section style="padding:0 0 80px;">
+  <div class="container">
+    <h3 style="font-family:var(--font-display);color:#fff;margin-bottom:24px;">More Projects</h3>
+    <div class="row g-4">
+      {% for p in related %}
+      <div class="col-md-4">
+        <a href="{% url 'project_detail' p.slug %}" style="text-decoration:none;">
+          <div class="project-card">
+            {% if p.cover_image %}<img src="{{ p.cover_image.url }}" alt="{{ p.title }}"/>{% else %}<div style="width:100%;height:100%;background:#1e1e1e;"></div>{% endif %}
+            <div class="project-overlay">
+              <h5 style="color:#fff;font-family:var(--font-display);">{{ p.title }}</h5>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block title %}Inquiries{% endblock %}
+{% block page_title %}Inquiries{% endblock %}
+{% block nav_inquiries %}active{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+  <div>
+    <span class="text-muted small">{{ inquiries.count }} total inquiries</span>
+  </div>
+  <div class="d-flex gap-2 flex-wrap">
+    {% for status, label in status_choices %}
+    <a href="?status={{ status }}" class="btn btn-sm {% if request.GET.status == status %}btn-warning{% else %}btn-outline-secondary{% endif %}" style="font-size:0.78rem;border-radius:50px;">{{ label }}</a>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="dash-table">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Contact</th>
+        <th>Service</th>
+        <th>Subject</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for inq in inquiries %}
+      <tr>
+        <td class="text-muted" style="font-size:0.8rem;">{{ inq.pk }}</td>
+        <td>
+          <div style="font-weight:600;color:#fff;">{{ inq.name }}</div>
+          <div class="text-muted" style="font-size:0.75rem;">{{ inq.email }}</div>
+          {% if inq.phone %}<div class="text-muted" style="font-size:0.75rem;">{{ inq.phone }}</div>{% endif %}
+        </td>
+        <td class="text-muted" style="font-size:0.85rem;">{{ inq.service|default:"–" }}</td>
+        <td style="max-width:220px;">
+          <div style="font-size:0.88rem;color:#e0e0e0;">{{ inq.subject }}</div>
+          <div class="text-muted" style="font-size:0.75rem;margin-top:3px;">{{ inq.message|truncatechars:50 }}</div>
+        </td>
+        <td>
+          <form method="post" action="">
+            {% csrf_token %}
+            <input type="hidden" name="inquiry_id" value="{{ inq.pk }}"/>
+            <select name="new_status" onchange="this.form.submit()" class="form-select" style="background:var(--dark-2);border:1px solid var(--border);color:#e0e0e0;font-size:0.78rem;padding:4px 8px;border-radius:3px;width:auto;">
+              <option value="new" {% if inq.status == 'new' %}selected{% endif %}>New</option>
+              <option value="read" {% if inq.status == 'read' %}selected{% endif %}>Read</option>
+              <option value="replied" {% if inq.status == 'replied' %}selected{% endif %}>Replied</option>
+              <option value="closed" {% if inq.status == 'closed' %}selected{% endif %}>Closed</option>
+            </select>
+          </form>
+        </td>
+        <td style="color:var(--text-muted);font-size:0.8rem;white-space:nowrap;">{{ inq.created_at|date:"M d, Y" }}</td>
+        <td>
+          <a href="mailto:{{ inq.email }}?subject=Re: {{ inq.subject }}" class="btn btn-sm" style="background:rgba(230,126,34,0.12);color:var(--primary);border:none;font-size:0.75rem;padding:5px 12px;border-radius:3px;" title="Reply via Email">
+            <i class="bi bi-reply"></i> Reply
+          </a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="7" class="text-center text-muted py-5"><i class="bi bi-inbox" style="font-size:2rem;display:block;margin-bottom:12px;"></i>No inquiries yet</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

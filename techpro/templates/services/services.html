@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Our Services — TechPro Engineering{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container page-header-content">
+    <nav aria-label="breadcrumb" class="mb-3"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li><li class="breadcrumb-item active">Services</li></ol></nav>
+    <h1 class="page-title">Engineering Services</h1>
+    <p class="text-muted mt-2">Comprehensive technical solutions for every need</p>
+  </div>
+</section>
+
+<section style="padding:80px 0;">
+  <div class="container">
+    <!-- Filter -->
+    {% if categories %}
+    <div class="d-flex flex-wrap gap-2 mb-5 justify-content-center" id="filter-btns">
+      <button class="btn-filter active" data-category="all">All Services</button>
+      {% for cat in categories %}
+      <button class="btn-filter" data-category="{{ cat.slug }}">{{ cat.name }}</button>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="row g-4" id="services-grid">
+      {% for service in services %}
+      <div class="col-md-6 col-lg-4 service-item" data-category="{{ service.category.slug|default:'uncategorized' }}" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'0' }}00">
+        <div class="service-card h-100">
+          {% if service.image %}
+          <div class="service-card-media">
+            <img src="{{ service.image.url }}" alt="{{ service.name }}" />
+          </div>
+          {% else %}
+          <div class="service-card-media service-media-placeholder">
+            <i class="bi {{ service.icon }}"></i>
+          </div>
+          {% endif %}
+          <div class="service-icon-wrap">
+            <i class="bi {{ service.icon }}"></i>
+          </div>
+          <div class="service-name">{{ service.name }}</div>
+          <p class="service-desc">{{ service.short_description }}</p>
+          {% if service.price_from %}
+          <div class="mt-3 mb-3">
+            <span style="font-size:0.75rem;color:var(--text-muted);">{{ service.price_label }}</span><br>
+            <span style="font-family:var(--font-display);font-size:1.4rem;color:var(--primary);">{{ service.price_from }} FCFA</span>
+          </div>
+          {% endif %}
+          <a href="{% url 'service_detail' service.slug %}" class="btn-glow" style="padding:10px 22px;font-size:0.85rem;">Learn More</a>
+        </div>
+      </div>
+      {% empty %}
+      <!-- Hardcoded default services -->
+      {% for s in default_services %}
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+        <div class="service-card h-100">
+          <div class="service-card-media service-media-placeholder">
+            <i class="bi {{ s.icon }}"></i>
+          </div>
+          <div class="service-icon-wrap">
+            <i class="bi {{ s.icon }}"></i>
+          </div>
+          <div class="service-name">{{ s.name }}</div>
+          <p class="service-desc">{{ s.short_description }}</p>
+        </div>
+      </div>
+      {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="padding:60px 0;">
+  <div class="container">
+    <div class="cta-section text-center">
+      <h2 class="section-title mb-3">Need a Custom Solution?</h2>
+      <p class="text-muted mb-4">Contact us for a tailored engineering consultation and free project quote.</p>
+      <div class="d-flex flex-wrap gap-3 justify-content-center">
+        <a href="{% url 'contact' %}" class="btn-glow">Request Quote</a>
+        <a href="https://wa.me/{{ COMPANY_WHATSAPP|cut:'+' }}" class="btn-outline-custom" target="_blank"><i class="bi bi-whatsapp me-2"></i>WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.btn-filter { background:transparent; border:1px solid var(--border); color:var(--text-muted); padding:8px 20px; border-radius:50px; font-size:0.82rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; transition:all 0.25s; }
+.btn-filter:hover,.btn-filter.active { background:var(--primary); border-color:var(--primary); color:#fff; }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const filterBtns = document.querySelectorAll('.btn-filter');
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cat = btn.dataset.category;
+    document.querySelectorAll('.service-item').forEach(item => {
+      item.style.display = (cat === 'all' || item.dataset.category === cat) ? 'block' : 'none';
+    });
+  });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block title %}Blog{% endblock %}
+{% block page_title %}Blog Posts{% endblock %}
+{% block nav_blog %}active{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+  <span class="text-muted small">{{ posts.count }} total posts</span>
+  <button class="btn-glow" disabled style="padding:10px 20px;font-size:0.85rem;border:none;cursor:not-allowed;text-decoration:none;opacity:0.65;">
+    <i class="bi bi-plus-lg me-2"></i>Add Post
+  </button>
+</div>
+
+<div class="dash-table">
+  <table>
+    <thead>
+      <tr><th>Post</th><th>Category</th><th>Author</th><th>Status</th><th>Views</th><th>Date</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for post in posts %}
+      <tr>
+        <td>
+          <div class="d-flex align-items-center gap-3">
+            {% if post.cover_image %}
+            <img src="{{ post.cover_image.url }}" style="width:44px;height:44px;object-fit:cover;border-radius:var(--radius);flex-shrink:0;"/>
+            {% else %}
+            <div style="width:44px;height:44px;background:var(--dark);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="bi bi-newspaper" style="color:var(--border);"></i></div>
+            {% endif %}
+            <div>
+              <div style="font-weight:600;color:#fff;font-size:0.88rem;max-width:200px;">{{ post.title|truncatechars:40 }}</div>
+              <div class="text-muted" style="font-size:0.75rem;">{{ post.excerpt|truncatechars:40 }}</div>
+            </div>
+          </div>
+        </td>
+        <td class="text-muted" style="font-size:0.85rem;">{{ post.category.name|default:"–" }}</td>
+        <td class="text-muted" style="font-size:0.85rem;">{{ post.author.get_full_name|default:post.author.username }}</td>
+        <td>
+          {% if post.status == 'published' %}
+          <span class="status-badge status-approved">Published</span>
+          {% else %}
+          <span class="status-badge status-pending">Draft</span>
+          {% endif %}
+        </td>
+        <td style="color:var(--text-muted);font-size:0.85rem;"><i class="bi bi-eye me-1"></i>{{ post.views }}</td>
+        <td class="text-muted" style="font-size:0.8rem;">{{ post.created_at|date:"M d, Y" }}</td>
+        <td>
+          <div class="d-flex gap-1">
+            <a href="#" class="btn btn-sm disabled" style="background:rgba(230,126,34,0.12);color:var(--primary);border:none;font-size:0.75rem;padding:4px 10px;border-radius:3px;cursor:not-allowed;">
+              <i class="bi bi-pencil"></i>
+            </a>
+            {% if post.status == 'published' %}
+            <a href="{% url 'blog_detail' post.slug %}" target="_blank" class="btn btn-sm" style="background:rgba(100,149,237,0.12);color:#6495ed;border:none;font-size:0.75rem;padding:4px 10px;border-radius:3px;">
+              <i class="bi bi-eye"></i>
+            </a>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="7" class="text-center text-muted py-5"><i class="bi bi-journal-plus" style="font-size:2rem;display:block;margin-bottom:12px;"></i>No posts yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

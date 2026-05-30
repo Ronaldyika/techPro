@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}TechPro Engineering{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Professional engineering and technical services in Cameroon{% endblock %}"/>
+  {% load static %}
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet"/>
+  <!-- AOS Animations -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="{% static 'css/main.css' %}"/>
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'home' %}">
+      <div class="brand-icon"><i class="bi bi-lightning-fill"></i></div>
+      <div>
+        <span class="brand-name">TECHPRO</span>
+        <span class="brand-sub d-block">ENGINEERING</span>
+      </div>
+    </a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarMain">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Services</a>
+          <ul class="dropdown-menu dropdown-menu-dark">
+            <li><a class="dropdown-item" href="{% url 'services' %}">All Services</a></li>
+            <li><hr class="dropdown-divider"/></li>
+            <li><a class="dropdown-item" href="{% url 'services' %}#solar">Solar & Electrical</a></li>
+            <li><a class="dropdown-item" href="{% url 'services' %}#construction">Construction</a></li>
+            <li><a class="dropdown-item" href="{% url 'services' %}#security">Security & Networks</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'projects' %}">Projects</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'blog' %}">Blog</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'reviews' %}">Reviews</a></li>
+        <li class="nav-item ms-lg-2">
+          <a class="btn btn-primary-custom" href="{% url 'contact' %}">Get a Quote</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- WhatsApp Float -->
+<a href="https://wa.me/{{ COMPANY_WHATSAPP|cut:'+' }}" class="whatsapp-float" target="_blank" title="Chat on WhatsApp">
+  <i class="bi bi-whatsapp"></i>
+</a>
+
+<!-- MAIN CONTENT -->
+<main>{% block content %}{% endblock %}</main>
+
+<!-- FOOTER -->
+<footer class="footer-section">
+  <div class="container">
+    <div class="row g-4 py-5">
+      <div class="col-lg-4">
+        <div class="footer-brand mb-3">
+          <span class="brand-name">TECHPRO</span>
+          <span class="ms-1 text-warning">ENGINEERING</span>
+        </div>
+        <p class="text-muted small">Powering the future with precision engineering. Solar, electrical, security, and smart infrastructure solutions across Cameroon.</p>
+        <div class="social-links mt-3">
+          {% if COMPANY_FACEBOOK %}<a href="{{ COMPANY_FACEBOOK }}" class="social-btn" target="_blank" rel="noreferrer"><i class="bi bi-facebook"></i></a>{% endif %}
+          {% if COMPANY_INSTAGRAM %}<a href="{{ COMPANY_INSTAGRAM }}" class="social-btn" target="_blank" rel="noreferrer"><i class="bi bi-instagram"></i></a>{% endif %}
+          {% if COMPANY_LINKEDIN %}<a href="{{ COMPANY_LINKEDIN }}" class="social-btn" target="_blank" rel="noreferrer"><i class="bi bi-linkedin"></i></a>{% endif %}
+          <a href="https://wa.me/{{ COMPANY_WHATSAPP|cut:'+' }}" class="social-btn whatsapp" target="_blank" rel="noreferrer"><i class="bi bi-whatsapp"></i></a>
+        </div>
+      </div>
+      <div class="col-lg-2 col-6">
+        <h6 class="footer-heading">Company</h6>
+        <ul class="footer-links">
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="{% url 'about' %}">About Us</a></li>
+          <li><a href="{% url 'services' %}">Services</a></li>
+          <li><a href="{% url 'projects' %}">Projects</a></li>
+          <li><a href="{% url 'blog' %}">Blog</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-6">
+        <h6 class="footer-heading">Services</h6>
+        <ul class="footer-links">
+          <li><a href="{% url 'services' %}">Solar Installation</a></li>
+          <li><a href="{% url 'services' %}">Electrical Wiring</a></li>
+          <li><a href="{% url 'services' %}">CCTV Security</a></li>
+          <li><a href="{% url 'services' %}">Network Solutions</a></li>
+          <li><a href="{% url 'services' %}">Smart Home</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-3">
+        <h6 class="footer-heading">Contact Us</h6>
+        <ul class="footer-contact">
+          <li><i class="bi bi-geo-alt-fill text-warning"></i> {{ COMPANY_ADDRESS }}</li>
+          <li><i class="bi bi-telephone-fill text-warning"></i> <a href="tel:{{ COMPANY_PHONE }}">{{ COMPANY_PHONE }}</a></li>
+          <li><i class="bi bi-envelope-fill text-warning"></i> <a href="mailto:{{ COMPANY_EMAIL }}">{{ COMPANY_EMAIL }}</a></li>
+          <li><i class="bi bi-whatsapp text-warning"></i> <a href="https://wa.me/{{ COMPANY_WHATSAPP|cut:'+' }}" target="_blank">WhatsApp Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="mb-0 text-muted small">&copy; {% now "Y" %} TechPro Engineering. All rights reserved. Built with precision.</p>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="{% url 'dashboard_login' %}" class="btn-outline-custom">Admin Panel</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- AOS -->
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script>
+AOS.init({ duration: 800, once: true, offset: 80 });
+
+// Navbar scroll effect
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('mainNav');
+  if (window.scrollY > 60) {
+    nav.classList.add('scrolled');
+  } else {
+    nav.classList.remove('scrolled');
+  }
+});
+
+// Active nav link
+const links = document.querySelectorAll('.navbar-nav .nav-link');
+links.forEach(link => {
+  if (link.href === window.location.href) link.classList.add('active');
+});
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

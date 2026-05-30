@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us — TechPro Engineering{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container page-header-content">
+    <nav aria-label="breadcrumb" class="mb-3">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+        <li class="breadcrumb-item active">About Us</li>
+      </ol>
+    </nav>
+    <h1 class="page-title">About TechPro</h1>
+    <p class="text-muted mt-2">A decade of engineering excellence across Cameroon</p>
+  </div>
+</section>
+
+<section style="padding:80px 0;">
+  <div class="container">
+    <div class="row g-5 align-items-center">
+      <div class="col-lg-6" data-aos="fade-right">
+        <span class="section-badge">Our Story</span>
+        <h2 class="section-title">Built on Expertise, Driven by Innovation</h2>
+        <div class="section-divider"></div>
+        <p class="text-light mb-3" style="line-height:1.8;color:rgba(255,255,255,0.85);">TechPro Engineering was founded with a clear mission: to bring world-class engineering solutions to Cameroon and the broader Central African region. Over a decade, we've grown from a small electrical contracting team into a comprehensive engineering services company.</p>
+        <p class="text-light mb-4" style="line-height:1.8;color:rgba(255,255,255,0.85);">From residential solar installations to large-scale industrial electrical systems and smart security infrastructure, our certified engineers bring precision and professionalism to every project.</p>
+        <div class="row g-3 mt-2">
+          <div class="col-6">
+            <div style="border-left:3px solid var(--primary);padding-left:16px;">
+              <div style="font-family:var(--font-display);font-size:2rem;color:var(--primary);">10+</div>
+              <div class="text-muted small">Years Experience</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div style="border-left:3px solid var(--primary);padding-left:16px;">
+              <div style="font-family:var(--font-display);font-size:2rem;color:var(--primary);">500+</div>
+              <div class="text-muted small">Projects Completed</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6" data-aos="fade-left">
+        <div class="row g-3">
+          <div class="col-12">
+            <div class="card-dark p-4">
+              <div class="d-flex gap-3 align-items-start">
+                <div class="service-icon-wrap" style="min-width:56px;"><i class="bi bi-bullseye"></i></div>
+                <div>
+                  <h5 style="font-family:var(--font-display);color:#fff;margin-bottom:8px;">Our Mission</h5>
+                  <p class="text-light small mb-0" style="line-height:1.7;color:rgba(255,255,255,0.78);">To deliver reliable, affordable, and innovative engineering solutions that empower homes and businesses across Cameroon.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="card-dark p-4">
+              <div class="d-flex gap-3 align-items-start">
+                <div class="service-icon-wrap" style="min-width:56px;"><i class="bi bi-eye"></i></div>
+                <div>
+                  <h5 style="font-family:var(--font-display);color:#fff;margin-bottom:8px;">Our Vision</h5>
+                  <p class="text-light small mb-0" style="line-height:1.7;color:rgba(255,255,255,0.78);">To be the leading engineering services company in Central Africa, recognized for quality, safety, and innovation.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="card-dark p-4">
+              <div class="d-flex gap-3 align-items-start">
+                <div class="service-icon-wrap" style="min-width:56px;"><i class="bi bi-gem"></i></div>
+                <div>
+                  <h5 style="font-family:var(--font-display);color:#fff;margin-bottom:8px;">Our Values</h5>
+                  <p class="text-light small mb-0" style="line-height:1.7;color:rgba(255,255,255,0.78);">Integrity, precision, safety, and client satisfaction are the cornerstones of every project we undertake.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+{% if team %}
+<section style="padding:80px 0;background:var(--dark-2);border-top:1px solid var(--border);">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <span class="section-badge">The Experts</span>
+      <h2 class="section-title">Meet Our Team</h2>
+      <div class="section-divider center"></div>
+    </div>
+    <div class="row g-4 justify-content-center">
+      {% for member in team %}
+      <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+        <div class="card-dark p-4 text-center">
+          {% if member.photo %}
+            <img src="{{ member.photo.url }}" class="rounded-circle mb-3" style="width:90px;height:90px;object-fit:cover;border:3px solid var(--primary);" alt="{{ member.name }}"/>
+          {% else %}
+            <div class="rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center" style="width:90px;height:90px;background:var(--gradient);font-family:var(--font-display);font-size:2rem;color:#fff;">{{ member.name|first }}</div>
+          {% endif %}
+          <h5 style="font-family:var(--font-display);color:#fff;letter-spacing:0.05em;">{{ member.name }}</h5>
+          <p style="color:var(--primary);font-size:0.82rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;">{{ member.role }}</p>
+          {% if member.bio %}<p class="text-muted small">{{ member.bio|truncatewords:20 }}</p>{% endif %}
+          <div class="team-social-links mt-3">
+            {% if member.facebook_url %}<a href="{{ member.facebook_url }}" target="_blank" rel="noreferrer"><i class="bi bi-facebook"></i></a>{% endif %}
+            {% if member.twitter_url %}<a href="{{ member.twitter_url }}" target="_blank" rel="noreferrer"><i class="bi bi-twitter"></i></a>{% endif %}
+            {% if member.linkedin %}<a href="{{ member.linkedin }}" target="_blank" rel="noreferrer"><i class="bi bi-linkedin"></i></a>{% endif %}
+            {% if member.instagram_url %}<a href="{{ member.instagram_url }}" target="_blank" rel="noreferrer"><i class="bi bi-instagram"></i></a>{% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section style="padding:80px 0;">
+  <div class="container">
+    <div class="cta-section text-center">
+      <h2 class="section-title mb-3">Ready to Work With Us?</h2>
+      <p class="text-muted mb-4">Let's discuss your project requirements and deliver a tailored engineering solution.</p>
+      <a href="{% url 'contact' %}" class="btn-glow">Contact Our Team</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

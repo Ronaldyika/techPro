@@ -1,0 +1,54 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block title %}Services Management{% endblock %}
+{% block page_title %}Services{% endblock %}
+{% block nav_services %}active{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+  <span class="text-muted small">{{ services.count }} services currently registered</span>
+</div>
+
+<div class="dash-table">
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Category</th><th>Featured</th><th>Active</th><th>Created</th><th>Website</th></tr>
+    </thead>
+    <tbody>
+      {% for service in services %}
+      <tr>
+        <td>
+          <div class="d-flex align-items-center gap-3">
+            <div>
+              <div style="font-weight:600;color:#fff;font-size:0.88rem;">{{ service.name }}</div>
+              <div class="text-muted" style="font-size:0.75rem;">{{ service.short_description|truncatechars:60 }}</div>
+            </div>
+          </div>
+        </td>
+        <td class="text-muted" style="font-size:0.85rem;">{{ service.category.name|default:'Uncategorized' }}</td>
+        <td>
+          {% if service.is_featured %}
+          <span class="status-badge status-replied">Yes</span>
+          {% else %}
+          <span class="status-badge status-pending">No</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if service.is_active %}
+          <span class="status-badge status-replied">Active</span>
+          {% else %}
+          <span class="status-badge status-pending">Inactive</span>
+          {% endif %}
+        </td>
+        <td class="text-muted" style="font-size:0.8rem;">{{ service.created_at|date:"M d, Y" }}</td>
+        <td>
+          <a href="{% url 'service_detail' service.slug %}" target="_blank" class="btn btn-sm" style="background:rgba(100,149,237,0.12);color:#6495ed;border:none;font-size:0.75rem;padding:4px 10px;border-radius:3px;">View</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" class="text-center text-muted py-5"><i class="bi bi-tools" style="font-size:2rem;display:block;margin-bottom:12px;"></i>No services available yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,198 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Overview{% endblock %}
+{% block nav_home %}active{% endblock %}
+
+{% block extra_css %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<!-- STAT CARDS -->
+<div class="row g-4 mb-4">
+  <div class="col-sm-6 col-xl-3">
+    <div class="dash-stat-card d-flex justify-content-between align-items-start">
+      <div>
+        <div class="dash-stat-num">{{ stats.total_inquiries }}</div>
+        <div class="dash-stat-label">Total Inquiries</div>
+        {% if stats.new_inquiries %}<span class="status-badge status-new mt-2 d-inline-block">{{ stats.new_inquiries }} new</span>{% endif %}
+      </div>
+      <div style="width:48px;height:48px;background:rgba(230,126,34,0.1);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:var(--primary);">
+        <i class="bi bi-inbox"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="dash-stat-card d-flex justify-content-between align-items-start">
+      <div>
+        <div class="dash-stat-num">{{ stats.total_reviews }}</div>
+        <div class="dash-stat-label">Total Reviews</div>
+        {% if stats.pending_reviews %}<span class="status-badge status-pending mt-2 d-inline-block">{{ stats.pending_reviews }} pending</span>{% endif %}
+      </div>
+      <div style="width:48px;height:48px;background:rgba(230,126,34,0.1);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:var(--primary);">
+        <i class="bi bi-star"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="dash-stat-card d-flex justify-content-between align-items-start">
+      <div>
+        <div class="dash-stat-num">{{ stats.total_projects }}</div>
+        <div class="dash-stat-label">Projects</div>
+        <span class="status-badge status-replied mt-2 d-inline-block">{{ stats.total_services }} services</span>
+      </div>
+      <div style="width:48px;height:48px;background:rgba(230,126,34,0.1);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:var(--primary);">
+        <i class="bi bi-folder2"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="dash-stat-card d-flex justify-content-between align-items-start">
+      <div>
+        <div class="dash-stat-num">{{ stats.avg_rating|floatformat:1 }}</div>
+        <div class="dash-stat-label">Avg Rating</div>
+        <div class="mt-1" style="color:#f39c12;font-size:0.9rem;">
+          {% for i in "12345" %}{% if forloop.counter <= stats.avg_rating|add:"0" %}<i class="bi bi-star-fill"></i>{% else %}<i class="bi bi-star"></i>{% endif %}{% endfor %}
+        </div>
+      </div>
+      <div style="width:48px;height:48px;background:rgba(230,126,34,0.1);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:var(--primary);">
+        <i class="bi bi-graph-up"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHARTS + RECENT INQUIRIES -->
+<div class="row g-4 mb-4">
+  <div class="col-lg-5">
+    <div class="dash-table" style="padding:24px;">
+      <h6 style="font-family:var(--font-display);color:#fff;letter-spacing:0.08em;margin-bottom:20px;">Rating Distribution</h6>
+      <canvas id="ratingChart" height="220"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-7">
+    <div class="dash-table">
+      <div style="padding:20px 20px 12px;display:flex;justify-content:space-between;align-items:center;">
+        <h6 style="font-family:var(--font-display);color:#fff;letter-spacing:0.08em;margin:0;">Recent Inquiries</h6>
+        <a href="{% url 'dashboard_inquiries' %}" style="color:var(--primary);font-size:0.82rem;text-decoration:none;">View All →</a>
+      </div>
+      <table>
+        <thead><tr><th>Name</th><th>Subject</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody>
+          {% for inq in recent_inquiries %}
+          <tr>
+            <td>
+              <div style="font-weight:600;color:#fff;font-size:0.88rem;">{{ inq.name }}</div>
+              <div class="text-muted" style="font-size:0.75rem;">{{ inq.email }}</div>
+            </td>
+            <td style="max-width:200px;">{{ inq.subject|truncatechars:35 }}</td>
+            <td><span class="status-badge status-{{ inq.status }}">{{ inq.get_status_display }}</span></td>
+            <td style="color:var(--text-muted);font-size:0.8rem;">{{ inq.created_at|date:"M d" }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4" class="text-center text-muted py-4">No inquiries yet</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- PENDING REVIEWS + RECENT PROJECTS -->
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="dash-table">
+      <div style="padding:20px 20px 12px;display:flex;justify-content:space-between;align-items:center;">
+        <h6 style="font-family:var(--font-display);color:#fff;letter-spacing:0.08em;margin:0;">Pending Reviews</h6>
+        <a href="{% url 'dashboard_reviews' %}" style="color:var(--primary);font-size:0.82rem;text-decoration:none;">Manage →</a>
+      </div>
+      <table>
+        <thead><tr><th>Reviewer</th><th>Rating</th><th>Action</th></tr></thead>
+        <tbody>
+          {% for review in pending_reviews %}
+          <tr>
+            <td>
+              <div style="font-weight:600;color:#fff;font-size:0.88rem;">{{ review.name }}</div>
+              <div class="text-muted" style="font-size:0.75rem;">{{ review.comment|truncatechars:30 }}</div>
+            </td>
+            <td style="color:#f39c12;">{% for i in "12345" %}{% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}{% endfor %}</td>
+            <td>
+              <form method="post" action="{% url 'dashboard_reviews' %}" class="d-flex gap-1">
+                {% csrf_token %}
+                <input type="hidden" name="review_id" value="{{ review.pk }}"/>
+                <button name="action" value="approve" class="btn btn-sm" style="background:rgba(46,213,115,0.15);color:#2ed573;border:none;padding:4px 10px;border-radius:3px;font-size:0.75rem;">Approve</button>
+                <button name="action" value="delete" class="btn btn-sm" style="background:rgba(231,76,60,0.15);color:#e74c3c;border:none;padding:4px 10px;border-radius:3px;font-size:0.75rem;" onclick="return confirm('Delete this review?')">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="3" class="text-center text-muted py-4">No pending reviews</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="dash-table">
+      <div style="padding:20px 20px 12px;display:flex;justify-content:space-between;align-items:center;">
+        <h6 style="font-family:var(--font-display);color:#fff;letter-spacing:0.08em;margin:0;">Recent Projects</h6>
+        <a href="{% url 'dashboard_projects' %}" style="color:var(--primary);font-size:0.82rem;text-decoration:none;">View All →</a>
+      </div>
+      <table>
+        <thead><tr><th>Project</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody>
+          {% for proj in recent_projects %}
+          <tr>
+            <td>
+              <div style="font-weight:600;color:#fff;font-size:0.88rem;">{{ proj.title|truncatechars:30 }}</div>
+              {% if proj.client %}<div class="text-muted" style="font-size:0.75rem;">{{ proj.client }}</div>{% endif %}
+            </td>
+            <td><span class="status-badge status-{{ proj.status }}">{{ proj.get_status_display }}</span></td>
+            <td style="color:var(--text-muted);font-size:0.8rem;">{{ proj.created_at|date:"M d" }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="3" class="text-center text-muted py-4">No projects yet</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const ctx = document.getElementById('ratingChart').getContext('2d');
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars'],
+    datasets: [{
+      label: 'Reviews',
+      data: {{ rating_dist|safe }},
+      backgroundColor: [
+        'rgba(231,76,60,0.7)',
+        'rgba(230,126,34,0.5)',
+        'rgba(243,156,18,0.6)',
+        'rgba(46,213,115,0.5)',
+        'rgba(46,213,115,0.85)',
+      ],
+      borderColor: 'transparent',
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#8a8a9a' } },
+      y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#8a8a9a', stepSize: 1 }, beginAtZero: true }
+    }
+  }
+});
+</script>
+{% endblock %}

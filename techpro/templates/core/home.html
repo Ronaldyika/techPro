@@ -1,0 +1,358 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}TechPro Engineering — Precision Engineering Services in Cameroon{% endblock %}
+
+{% block content %}
+
+<!-- HERO SECTION -->
+<section class="hero-section">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-7 hero-content">
+        <p class="hero-eyebrow">⚡ Bamenda, Cameroon</p>
+        <h1 class="hero-title">
+          PRECISION<br>
+          <span>ENGINEERING</span><br>
+          SOLUTIONS
+        </h1>
+        <p class="hero-subtitle">Solar installation, electrical systems, CCTV security, network infrastructure, and smart home solutions. Built to last. Engineered to perform.</p>
+        <div class="d-flex flex-wrap gap-3">
+          <a href="{% url 'services' %}" class="btn-glow">Explore Services</a>
+          <a href="{% url 'contact' %}" class="btn-outline-custom">Get Free Quote</a>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <div class="hero-stat-num">10+</div>
+            <div class="hero-stat-label">Years Experience</div>
+          </div>
+          <div>
+            <div class="hero-stat-num">500+</div>
+            <div class="hero-stat-label">Projects Done</div>
+          </div>
+          <div>
+            <div class="hero-stat-num">300+</div>
+            <div class="hero-stat-label">Happy Clients</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-5 d-none d-lg-flex hero-visual">
+        <div class="orbit-ring orbit-ring-1"><div class="orbit-dot"></div></div>
+        <div class="orbit-ring orbit-ring-2"><div class="orbit-dot"></div></div>
+        <div class="hero-hexagon">
+          <i class="bi bi-lightning-charge-fill hero-hex-inner"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUSTED BADGES -->
+<section class="py-4 bg-dark-2" style="border-bottom:1px solid var(--border);">
+  <div class="container">
+    <div class="d-flex flex-wrap align-items-center justify-content-center gap-4 text-muted">
+      <span class="d-flex align-items-center gap-2 small"><i class="bi bi-shield-check text-warning fs-5"></i> Licensed & Insured</span>
+      <span style="color:var(--border);">|</span>
+      <span class="d-flex align-items-center gap-2 small"><i class="bi bi-award text-warning fs-5"></i> Certified Technicians</span>
+      <span style="color:var(--border);">|</span>
+      <span class="d-flex align-items-center gap-2 small"><i class="bi bi-clock text-warning fs-5"></i> 24/7 Emergency Support</span>
+      <span style="color:var(--border);">|</span>
+      <span class="d-flex align-items-center gap-2 small"><i class="bi bi-geo-alt text-warning fs-5"></i> Serving All of Cameroon</span>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES SECTION -->
+<section class="py-6" style="padding:80px 0;">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <span class="section-badge">What We Offer</span>
+      <h2 class="section-title">Our Engineering Services</h2>
+      <div class="section-divider center"></div>
+      <p class="text-muted" style="max-width:550px;margin:0 auto;">From solar energy to smart security systems — we deliver end-to-end engineering solutions with uncompromising quality.</p>
+    </div>
+    <div class="row g-4" id="services-grid">
+      {% for service in services %}
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+        <div class="service-card">
+          {% if service.image %}
+          <div class="service-card-media">
+            <img src="{{ service.image.url }}" alt="{{ service.name }}" />
+          </div>
+          {% else %}
+          <div class="service-card-media service-media-placeholder">
+            <i class="bi {{ service.icon }}"></i>
+          </div>
+          {% endif %}
+          <div class="service-icon-wrap">
+            <i class="bi {{ service.icon }}"></i>
+          </div>
+          <div class="service-name">{{ service.name }}</div>
+          <p class="service-desc">{{ service.short_description }}</p>
+          <a href="{% url 'service_detail' service.slug %}" class="d-inline-flex align-items-center gap-2 mt-3 small fw-600" style="color:var(--primary);text-decoration:none;font-weight:600;">
+            Learn More <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+      {% empty %}
+      <!-- Default service cards when no DB entries yet -->
+      {% for s in default_services %}
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+        <div class="service-card">
+          <div class="service-card-media service-media-placeholder">
+            <i class="bi {{ s.icon }}"></i>
+          </div>
+          <div class="service-icon-wrap">
+            <i class="bi {{ s.icon }}"></i>
+          </div>
+          <div class="service-name">{{ s.name }}</div>
+          <p class="service-desc">{{ s.short_description }}</p>
+        </div>
+      </div>
+      {% endfor %}
+      {% endfor %}
+    </div>
+    <div class="text-center mt-5">
+      <a href="{% url 'services' %}" class="btn-outline-custom">View All Services</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS SECTION -->
+<section class="stats-section py-5">
+  <div class="container">
+    <div class="row g-4 text-center">
+      <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="0">
+        <div class="stat-number" id="stat-exp">10</div>
+        <div class="stat-label">Years of Excellence</div>
+      </div>
+      <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+        <div class="stat-number" id="stat-proj">500</div>
+        <div class="stat-label">Projects Completed</div>
+      </div>
+      <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
+        <div class="stat-number" id="stat-clients">300</div>
+        <div class="stat-label">Satisfied Clients</div>
+      </div>
+      <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
+        <div class="stat-number" id="stat-team">25</div>
+        <div class="stat-label">Expert Engineers</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED PROJECTS -->
+{% if projects %}
+<section class="py-5" style="padding:80px 0!important;">
+  <div class="container">
+    <div class="d-flex align-items-end justify-content-between mb-5 flex-wrap gap-3">
+      <div data-aos="fade-right">
+        <span class="section-badge">Our Work</span>
+        <h2 class="section-title mb-0">Featured Projects</h2>
+        <div class="section-divider"></div>
+      </div>
+      <a href="{% url 'projects' %}" class="btn-outline-custom" style="padding:10px 22px;font-size:0.9rem;" data-aos="fade-left">View All</a>
+    </div>
+    <div class="row g-4">
+      {% for project in projects %}
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+        <a href="{% url 'project_detail' project.slug %}" style="text-decoration:none;">
+          <div class="project-card">
+            {% if project.cover_image %}
+              <img src="{{ project.cover_image.url }}" alt="{{ project.title }}"/>
+            {% else %}
+              <div style="width:100%;height:100%;background:linear-gradient(135deg,#1e1e1e,#2a2a2a);display:flex;align-items:center;justify-content:center;">
+                <i class="bi bi-hammer" style="font-size:60px;color:var(--border);"></i>
+              </div>
+            {% endif %}
+            <span class="project-badge">{{ project.get_status_display }}</span>
+            <div class="project-overlay">
+              <h5 style="color:#fff;font-family:var(--font-display);letter-spacing:0.05em;margin-bottom:6px;">{{ project.title }}</h5>
+              <p style="color:rgba(255,255,255,0.6);font-size:0.85rem;margin:0;">{{ project.location }}</p>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- WHY CHOOSE US -->
+<section style="padding:80px 0;background:var(--dark-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <div class="container">
+    <div class="row g-5 align-items-center">
+      <div class="col-lg-5" data-aos="fade-right">
+        <span class="section-badge">Why TechPro</span>
+        <h2 class="section-title">Engineered for Excellence</h2>
+        <div class="section-divider"></div>
+        <p class="text-muted mb-4">We combine deep technical expertise with a commitment to delivering reliable, cost-effective engineering solutions that stand the test of time.</p>
+        <a href="{% url 'about' %}" class="btn-glow" style="padding:12px 28px;font-size:0.95rem;">About Our Team</a>
+      </div>
+      <div class="col-lg-7" data-aos="fade-left">
+        <div class="row g-3">
+          {% for item in "1234" %}
+          <div class="col-sm-6">
+            <div class="card-dark p-4">
+              {% if forloop.counter == 1 %}
+              <i class="bi bi-patch-check-fill fs-3 text-warning mb-3 d-block"></i>
+              <h5 style="font-family:var(--font-display);color:#fff;letter-spacing:0.05em;">Quality Guaranteed</h5>
+              <p class="text-muted small mb-0">Every project is backed by our quality guarantee and professional warranty.</p>
+              {% elif forloop.counter == 2 %}
+              <i class="bi bi-clock-fill fs-3 text-warning mb-3 d-block"></i>
+              <h5 style="font-family:var(--font-display);color:#fff;letter-spacing:0.05em;">On-Time Delivery</h5>
+              <p class="text-muted small mb-0">We respect your timeline and consistently deliver projects on schedule.</p>
+              {% elif forloop.counter == 3 %}
+              <i class="bi bi-people-fill fs-3 text-warning mb-3 d-block"></i>
+              <h5 style="font-family:var(--font-display);color:#fff;letter-spacing:0.05em;">Expert Team</h5>
+              <p class="text-muted small mb-0">Certified engineers with years of hands-on experience in all domains.</p>
+              {% else %}
+              <i class="bi bi-headset fs-3 text-warning mb-3 d-block"></i>
+              <h5 style="font-family:var(--font-display);color:#fff;letter-spacing:0.05em;">24/7 Support</h5>
+              <p class="text-muted small mb-0">Round-the-clock emergency support for all our clients and installations.</p>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS / TESTIMONIALS -->
+{% if reviews %}
+<section style="padding:80px 0;">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <span class="section-badge">Testimonials</span>
+      <h2 class="section-title">What Our Clients Say</h2>
+      <div class="section-divider center"></div>
+    </div>
+    <div class="row g-4">
+      {% for review in reviews %}
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+        <div class="review-card">
+          <div class="star-rating mb-3">
+            {% for i in "12345" %}
+              {% if forloop.counter <= review.rating %}
+                <i class="bi bi-star-fill"></i>
+              {% else %}
+                <i class="bi bi-star"></i>
+              {% endif %}
+            {% endfor %}
+          </div>
+          {% if review.title %}<h6 style="color:#fff;font-family:var(--font-display);letter-spacing:0.05em;margin-bottom:10px;">{{ review.title }}</h6>{% endif %}
+          <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.7;">{{ review.comment|truncatewords:30 }}</p>
+          <div class="d-flex align-items-center gap-2 mt-4">
+            <div style="width:36px;height:36px;background:var(--gradient);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);color:#fff;font-size:1.1rem;">
+              {{ review.name|first }}
+            </div>
+            <div>
+              <div style="color:#fff;font-weight:600;font-size:0.9rem;">{{ review.name }}</div>
+              {% if review.service %}<div style="color:var(--text-muted);font-size:0.78rem;">{{ review.service }}</div>{% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-5">
+      <a href="{% url 'reviews' %}" class="btn-outline-custom">Leave a Review</a>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- RECENT BLOG POSTS -->
+{% if recent_posts %}
+<section style="padding:80px 0;background:var(--dark-2);border-top:1px solid var(--border);">
+  <div class="container">
+    <div class="d-flex align-items-end justify-content-between mb-5 flex-wrap gap-3">
+      <div data-aos="fade-right">
+        <span class="section-badge">Latest Updates</span>
+        <h2 class="section-title mb-0">From Our Blog</h2>
+        <div class="section-divider"></div>
+      </div>
+      <a href="{% url 'blog' %}" class="btn-outline-custom" style="padding:10px 22px;font-size:0.9rem;">All Posts</a>
+    </div>
+    <div class="row g-4">
+      {% for post in recent_posts %}
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+        <div class="blog-card">
+          <div class="blog-card-img">
+            {% if post.cover_image %}
+              <img src="{{ post.cover_image.url }}" alt="{{ post.title }}"/>
+            {% else %}
+              <div style="width:100%;height:100%;background:linear-gradient(135deg,#1a1a2e,#1e1e1e);display:flex;align-items:center;justify-content:center;">
+                <i class="bi bi-newspaper" style="font-size:50px;color:var(--border);"></i>
+              </div>
+            {% endif %}
+          </div>
+          <div class="blog-card-body">
+            {% if post.category %}<span class="blog-category-badge">{{ post.category.name }}</span>{% endif %}
+            <h5 class="mt-2 mb-2" style="font-family:var(--font-display);color:#fff;letter-spacing:0.04em;font-size:1.2rem;">{{ post.title }}</h5>
+            <p class="text-muted small mb-3" style="line-height:1.6;">{{ post.excerpt|truncatewords:18 }}</p>
+            <a href="{% url 'blog_detail' post.slug %}" style="color:var(--primary);text-decoration:none;font-size:0.85rem;font-weight:600;">Read More →</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- CTA SECTION -->
+<section style="padding:80px 0;">
+  <div class="container">
+    <div class="cta-section text-center" data-aos="zoom-in">
+      <span class="section-badge">Start Today</span>
+      <h2 class="section-title mb-3">Ready to Power Your Next Project?</h2>
+      <p class="text-muted mb-5" style="max-width:500px;margin:0 auto 40px;">Get a free consultation and quote from our expert engineers. No obligation, just solutions.</p>
+      <div class="d-flex flex-wrap gap-3 justify-content-center">
+        <a href="{% url 'contact' %}" class="btn-glow">Get Free Quote</a>
+        <a href="https://wa.me/{{ COMPANY_WHATSAPP|cut:'+' }}" class="btn-outline-custom" target="_blank">
+          <i class="bi bi-whatsapp me-2"></i>Chat on WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Counter animation
+function animateCounter(el, target) {
+  let current = 0;
+  const step = Math.ceil(target / 60);
+  const timer = setInterval(() => {
+    current = Math.min(current + step, target);
+    el.textContent = current + (target >= 100 ? '+' : '+');
+    if (current >= target) clearInterval(timer);
+  }, 30);
+}
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      animateCounter(document.getElementById('stat-exp'), 10);
+      animateCounter(document.getElementById('stat-proj'), 500);
+      animateCounter(document.getElementById('stat-clients'), 300);
+      animateCounter(document.getElementById('stat-team'), 25);
+      observer.disconnect();
+    }
+  });
+}, { threshold: 0.3 });
+
+const statsSection = document.querySelector('.stats-section');
+if (statsSection) observer.observe(statsSection);
+</script>
+{% endblock %}

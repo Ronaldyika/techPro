@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ post.title }} — TechPro Blog{% endblock %}
+{% block meta_description %}{{ post.excerpt }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container page-header-content">
+    <nav aria-label="breadcrumb" class="mb-3"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li><li class="breadcrumb-item"><a href="{% url 'blog' %}">Blog</a></li><li class="breadcrumb-item active">{{ post.title|truncatewords:6 }}</li></ol></nav>
+    {% if post.category %}<span class="section-badge mb-3">{{ post.category.name }}</span>{% endif %}
+    <h1 class="page-title" style="font-size:clamp(2rem,4vw,3.5rem);">{{ post.title }}</h1>
+    <div class="d-flex gap-3 mt-3 flex-wrap align-items-center">
+      <div class="d-flex align-items-center gap-2">
+        <div style="width:32px;height:32px;background:var(--gradient);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);color:#fff;">{{ post.author.get_full_name|default:post.author.username|first|upper }}</div>
+        <span class="text-muted small">{{ post.author.get_full_name|default:post.author.username }}</span>
+      </div>
+      <span class="text-muted small"><i class="bi bi-calendar3 me-1"></i>{{ post.created_at|date:"F d, Y" }}</span>
+      <span class="text-muted small"><i class="bi bi-eye me-1"></i>{{ post.views }} views</span>
+    </div>
+  </div>
+</section>
+
+<section style="padding:80px 0;">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-8">
+        {% if post.cover_image %}
+        <img src="{{ post.cover_image.url }}" alt="{{ post.title }}" class="img-fluid mb-5" style="width:100%;border-radius:var(--radius-lg);max-height:450px;object-fit:cover;border:1px solid var(--border);"/>
+        {% endif %}
+
+        <div class="blog-content" style="color:#c8c8c8;line-height:1.9;font-size:1.02rem;">
+          {{ post.content|safe|linebreaks }}
+        </div>
+
+        {% if post.tags %}
+        <div class="mt-5 pt-4" style="border-top:1px solid var(--border);">
+          <span class="text-muted small me-2">Tags:</span>
+          {% for tag in post.get_tags_list %}
+          <span style="display:inline-block;background:rgba(230,126,34,0.1);border:1px solid rgba(230,126,34,0.2);color:var(--primary);padding:3px 12px;border-radius:50px;font-size:0.78rem;margin:3px;">{{ tag }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Share -->
+        <div class="mt-4 d-flex align-items-center gap-3 flex-wrap">
+          <span class="text-muted small">Share:</span>
+          <a href="https://wa.me/?text={{ post.title|urlencode }}" target="_blank" class="social-btn" title="Share on WhatsApp" style="color:#25d366;border-color:#25d366;"><i class="bi bi-whatsapp"></i></a>
+          <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" class="social-btn"><i class="bi bi-facebook"></i></a>
+          <a href="https://twitter.com/intent/tweet?text={{ post.title|urlencode }}&url={{ request.build_absolute_uri }}" target="_blank" class="social-btn"><i class="bi bi-twitter-x"></i></a>
+          <button onclick="navigator.clipboard.writeText(window.location.href);this.textContent='Copied!';" class="social-btn" style="background:none;cursor:pointer;font-size:0.75rem;padding:0 12px;width:auto;color:var(--text-muted);"><i class="bi bi-link-45deg me-1"></i>Copy Link</button>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="col-lg-4">
+        <div class="sticky-top" style="top:90px;">
+          <div class="card-dark p-4 mb-4">
+            <h6 style="font-family:var(--font-display);color:#fff;letter-spacing:0.08em;margin-bottom:16px;">About the Author</h6>
+            <div class="d-flex gap-3 align-items-center">
+              <div style="width:50px;height:50px;background:var(--gradient);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);color:#fff;font-size:1.4rem;flex-shrink:0;">{{ post.author.get_full_name|default:post.author.username|first|upper }}</div>
+              <div>
+                <div style="color:#fff;font-weight:600;">{{ post.author.get_full_name|default:post.author.username }}</div>
+                <div class="text-muted small">TechPro Engineering Team</div>
+              </div>
+            </div>
+          </div>
+
+          {% if related %}
+          <div class="card-dark p-4">
+            <h6 style="font-family:var(--font-display);color:#fff;letter-spacing:0.08em;margin-bottom:16px;">Related Posts</h6>
+            {% for p in related %}
+            <div class="mb-3 pb-3" style="border-bottom:1px solid var(--border);">
+              <a href="{% url 'blog_detail' p.slug %}" style="color:#fff;text-decoration:none;font-size:0.9rem;font-weight:600;line-height:1.4;display:block;margin-bottom:4px;">{{ p.title }}</a>
+              <span class="text-muted" style="font-size:0.75rem;">{{ p.created_at|date:"M d, Y" }}</span>
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.blog-content h1,.blog-content h2,.blog-content h3,.blog-content h4 { font-family:var(--font-display);color:#fff;letter-spacing:0.04em;margin:32px 0 16px; }
+.blog-content p { margin-bottom:20px; }
+.blog-content a { color:var(--primary); }
+.blog-content blockquote { border-left:3px solid var(--primary);padding:16px 24px;background:rgba(230,126,34,0.06);margin:24px 0;border-radius:0 var(--radius) var(--radius) 0; }
+.blog-content ul,.blog-content ol { padding-left:24px;margin-bottom:20px; }
+.blog-content li { margin-bottom:8px; }
+.blog-content img { max-width:100%;border-radius:var(--radius);margin:16px 0; }
+</style>
+{% endblock %}

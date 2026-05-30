@@ -1,0 +1,64 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block title %}Projects{% endblock %}
+{% block page_title %}Projects{% endblock %}
+{% block nav_projects %}active{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+  <span class="text-muted small">{{ projects.count }} total projects</span>
+  <button class="btn-glow" disabled style="padding:10px 20px;font-size:0.85rem;border:none;cursor:not-allowed;text-decoration:none;opacity:0.65;">
+    <i class="bi bi-plus-lg me-2"></i>Add Project
+  </button>
+</div>
+
+<div class="dash-table">
+  <table>
+    <thead>
+      <tr><th>Project</th><th>Category</th><th>Client</th><th>Status</th><th>Featured</th><th>Date</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for proj in projects %}
+      <tr>
+        <td>
+          <div class="d-flex align-items-center gap-3">
+            {% if proj.cover_image %}
+            <img src="{{ proj.cover_image.url }}" style="width:44px;height:44px;object-fit:cover;border-radius:var(--radius);flex-shrink:0;"/>
+            {% else %}
+            <div style="width:44px;height:44px;background:var(--dark);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="bi bi-image" style="color:var(--border);"></i></div>
+            {% endif %}
+            <div>
+              <div style="font-weight:600;color:#fff;font-size:0.88rem;">{{ proj.title }}</div>
+              {% if proj.location %}<div class="text-muted" style="font-size:0.75rem;"><i class="bi bi-geo-alt me-1"></i>{{ proj.location }}</div>{% endif %}
+            </div>
+          </div>
+        </td>
+        <td class="text-muted" style="font-size:0.85rem;">{{ proj.category.name|default:"–" }}</td>
+        <td class="text-muted" style="font-size:0.85rem;">{{ proj.client|default:"–" }}</td>
+        <td><span class="status-badge status-{{ proj.status }}">{{ proj.get_status_display }}</span></td>
+        <td>
+          {% if proj.is_featured %}
+          <i class="bi bi-star-fill" style="color:#f39c12;"></i>
+          {% else %}
+          <i class="bi bi-star" style="color:var(--border);"></i>
+          {% endif %}
+        </td>
+        <td class="text-muted" style="font-size:0.8rem;">{{ proj.created_at|date:"M d, Y" }}</td>
+        <td>
+          <div class="d-flex gap-1">
+            <a href="#" class="btn btn-sm disabled" style="background:rgba(230,126,34,0.12);color:var(--primary);border:none;font-size:0.75rem;padding:4px 10px;border-radius:3px;cursor:not-allowed;">
+              <i class="bi bi-pencil"></i>
+            </a>
+            <a href="{% url 'project_detail' proj.slug %}" target="_blank" class="btn btn-sm" style="background:rgba(100,149,237,0.12);color:#6495ed;border:none;font-size:0.75rem;padding:4px 10px;border-radius:3px;">
+              <i class="bi bi-eye"></i>
+            </a>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="7" class="text-center text-muted py-5"><i class="bi bi-folder2-open" style="font-size:2rem;display:block;margin-bottom:12px;"></i>No projects yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

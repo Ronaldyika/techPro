@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Client Reviews — TechPro Engineering{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container page-header-content">
+    <nav aria-label="breadcrumb" class="mb-3"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li><li class="breadcrumb-item active">Reviews</li></ol></nav>
+    <h1 class="page-title">Client Reviews</h1>
+    <p class="text-muted mt-2">What our clients say about our work</p>
+  </div>
+</section>
+
+<!-- RATING STATS -->
+<section style="padding:60px 0;background:var(--dark-2);border-bottom:1px solid var(--border);">
+  <div class="container">
+    <div class="row g-4 align-items-center" id="rating-stats">
+      <div class="col-md-4 text-center">
+        <div id="avg-rating" style="font-family:var(--font-display);font-size:5rem;color:var(--primary);line-height:1;">–</div>
+        <div class="star-rating mb-1" id="avg-stars"></div>
+        <div id="total-reviews" class="text-muted small">Loading reviews...</div>
+      </div>
+      <div class="col-md-8">
+        <div id="rating-bars"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS GRID -->
+<section style="padding:80px 0;">
+  <div class="container">
+    <div class="row g-4" id="reviews-grid">
+      {% for review in reviews %}
+      <div class="col-md-6 col-lg-4" data-aos="fade-up">
+        <div class="review-card">
+          <div class="star-rating mb-3">
+            {% for i in "12345" %}{% if forloop.counter <= review.rating %}<i class="bi bi-star-fill"></i>{% else %}<i class="bi bi-star"></i>{% endif %}{% endfor %}
+          </div>
+          {% if review.title %}<h6 style="color:#fff;font-family:var(--font-display);letter-spacing:0.05em;margin-bottom:10px;">{{ review.title }}</h6>{% endif %}
+          <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.7;">{{ review.comment }}</p>
+          <div class="d-flex align-items-center gap-2 mt-4">
+            <div style="width:38px;height:38px;background:var(--gradient);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);color:#fff;font-size:1.2rem;flex-shrink:0;">{{ review.name|first }}</div>
+            <div>
+              <div style="color:#fff;font-weight:600;font-size:0.9rem;">{{ review.name }}</div>
+              {% if review.service %}<div style="color:var(--text-muted);font-size:0.75rem;">{{ review.service }}</div>{% endif %}
+            </div>
+            <div class="ms-auto text-muted" style="font-size:0.75rem;">{{ review.created_at|date:"M Y" }}</div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center py-4 text-muted">No reviews yet. Be the first to share your experience!</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- SUBMIT REVIEW FORM -->
+<section style="padding:0 0 80px;">
+  <div class="container" style="max-width:680px;">
+    <div class="card-dark p-5">
+      <div class="text-center mb-4">
+        <span class="section-badge">Share Your Experience</span>
+        <h2 class="section-title">Leave a Review</h2>
+        <div class="section-divider center"></div>
+      </div>
+      <div id="review-alert" class="d-none"></div>
+      <form id="review-form">
+        <div class="mb-3">
+          <label class="form-label-custom">Your Name *</label>
+          <input type="text" class="form-control-dark" id="r-name" required placeholder="John Doe"/>
+        </div>
+        <div class="mb-3">
+          <label class="form-label-custom">Email *</label>
+          <input type="email" class="form-control-dark" id="r-email" required placeholder="you@email.com"/>
+        </div>
+        <div class="mb-3">
+          <label class="form-label-custom">Service Used</label>
+          <input type="text" class="form-control-dark" id="r-service" placeholder="e.g. Solar Installation"/>
+        </div>
+        <div class="mb-3">
+          <label class="form-label-custom">Rating *</label>
+          <div class="star-select d-flex gap-2 mt-1" id="star-select">
+            {% for i in "12345" %}
+            <i class="bi bi-star-fill" data-val="{{ forloop.counter }}" style="font-size:1.8rem;color:var(--border);cursor:pointer;transition:color 0.15s;"></i>
+            {% endfor %}
+          </div>
+          <input type="hidden" id="r-rating" value="0"/>
+        </div>
+        <div class="mb-3">
+          <label class="form-label-custom">Review Title</label>
+          <input type="text" class="form-control-dark" id="r-title" placeholder="Great service!"/>
+        </div>
+        <div class="mb-4">
+          <label class="form-label-custom">Your Review *</label>
+          <textarea class="form-control-dark" id="r-comment" rows="4" required placeholder="Tell us about your experience..."></textarea>
+        </div>
+        <button type="submit" class="btn-glow w-100" style="border:none;cursor:pointer;font-size:1rem;">Submit Review</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Star select
+const stars = document.querySelectorAll('#star-select i');
+let selectedRating = 0;
+stars.forEach(s => {
+  s.addEventListener('mouseenter', () => {
+    const v = parseInt(s.dataset.val);
+    stars.forEach((st, i) => { st.style.color = i < v ? '#f39c12' : 'var(--border)'; });
+  });
+  s.addEventListener('mouseleave', () => {
+    stars.forEach((st, i) => { st.style.color = i < selectedRating ? '#f39c12' : 'var(--border)'; });
+  });
+  s.addEventListener('click', () => {
+    selectedRating = parseInt(s.dataset.val);
+    document.getElementById('r-rating').value = selectedRating;
+    stars.forEach((st, i) => { st.style.color = i < selectedRating ? '#f39c12' : 'var(--border)'; });
+  });
+});
+
+// Submit review
+document.getElementById('review-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const rating = parseInt(document.getElementById('r-rating').value);
+  if (!rating) { showAlert('Please select a rating.', 'danger'); return; }
+  const data = {
+    name: document.getElementById('r-name').value,
+    email: document.getElementById('r-email').value,
+    service: document.getElementById('r-service').value,
+    rating: rating,
+    title: document.getElementById('r-title').value,
+    comment: document.getElementById('r-comment').value,
+  };
+  try {
+    const res = await fetch('/api/reviews/', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','X-CSRFToken': getCookie('csrftoken')},
+      body: JSON.stringify(data)
+    });
+    if (res.ok) {
+      showAlert('Thank you! Your review has been submitted and is pending approval.', 'success');
+      document.getElementById('review-form').reset();
+      selectedRating = 0;
+      stars.forEach(st => st.style.color = 'var(--border)');
+    } else {
+      const err = await res.json();
+      showAlert('Error: ' + JSON.stringify(err), 'danger');
+    }
+  } catch(err) { showAlert('Network error. Please try again.', 'danger'); }
+});
+
+function showAlert(msg, type) {
+  const el = document.getElementById('review-alert');
+  el.className = `alert alert-${type} mb-4`;
+  el.textContent = msg;
+}
+
+// Load stats
+fetch('/api/reviews/stats/').then(r => r.json()).then(data => {
+  const avg = data.avg_rating ? parseFloat(data.avg_rating).toFixed(1) : 'N/A';
+  document.getElementById('avg-rating').textContent = avg;
+  document.getElementById('total-reviews').textContent = `Based on ${data.total} reviews`;
+  const starsEl = document.getElementById('avg-stars');
+  const fullStars = Math.round(parseFloat(avg));
+  starsEl.innerHTML = Array.from({length:5},(_,i) => `<i class="bi bi-star${i<fullStars?'-fill':''}"></i>`).join('');
+  const dist = data.distribution || {};
+  const barsEl = document.getElementById('rating-bars');
+  barsEl.innerHTML = [5,4,3,2,1].map(n => {
+    const count = dist[n] || 0;
+    const pct = data.total ? Math.round(count/data.total*100) : 0;
+    return `<div class="d-flex align-items-center gap-2 mb-2"><span class="text-muted small" style="width:20px;">${n}</span><i class="bi bi-star-fill" style="color:#f39c12;font-size:0.75rem;"></i><div style="flex:1;background:var(--border);border-radius:2px;height:8px;"><div style="width:${pct}%;background:var(--gradient);height:100%;border-radius:2px;transition:width 1s;"></div></div><span class="text-muted small" style="width:30px;">${pct}%</span></div>`;
+  }).join('');
+}).catch(() => {});
+
+function getCookie(name) {
+  return document.cookie.split(';').map(c=>c.trim()).find(c=>c.startsWith(name+'='))?.split('=')[1] || '';
+}
+</script>
+{% endblock %}

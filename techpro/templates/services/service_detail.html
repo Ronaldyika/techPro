@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ service.name }} — TechPro Engineering{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container page-header-content">
+    <nav aria-label="breadcrumb" class="mb-3"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li><li class="breadcrumb-item"><a href="{% url 'services' %}">Services</a></li><li class="breadcrumb-item active">{{ service.name }}</li></ol></nav>
+    <div class="d-flex align-items-center gap-3">
+      <div class="service-icon-wrap"><i class="bi {{ service.icon }}"></i></div>
+      <h1 class="page-title mb-0">{{ service.name }}</h1>
+    </div>
+  </div>
+</section>
+
+<section style="padding:80px 0;">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-8">
+        {% if service.image %}
+        <img src="{{ service.image.url }}" alt="{{ service.name }}" class="img-fluid rounded mb-4" style="width:100%;object-fit:cover;max-height:400px;border:1px solid var(--border);"/>
+        {% else %}
+        <div class="service-card-media service-media-placeholder mb-4">
+          <i class="bi {{ service.icon }}"></i>
+        </div>
+        {% endif %}
+        <div style="color:#c0c0c0;line-height:1.85;font-size:1rem;">
+          {{ service.description|linebreaks }}
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card-dark p-4 sticky-top" style="top:90px;">
+          <h4 style="font-family:var(--font-display);color:#fff;letter-spacing:0.05em;margin-bottom:20px;">Get This Service</h4>
+          {% if service.price_from %}
+          <div class="mb-4 p-3" style="background:rgba(230,126,34,0.08);border:1px solid rgba(230,126,34,0.2);border-radius:var(--radius);">
+            <div style="font-size:0.75rem;color:var(--text-muted);">{{ service.price_label }}</div>
+            <div style="font-family:var(--font-display);font-size:2rem;color:var(--primary);">{{ service.price_from }} FCFA</div>
+          </div>
+          {% endif %}
+          <a href="{% url 'contact' %}" class="btn-glow d-block text-center mb-3">Request a Quote</a>
+          <a href="https://wa.me/{{ COMPANY_WHATSAPP|cut:'+' }}" class="btn-outline-custom d-block text-center" target="_blank">
+            <i class="bi bi-whatsapp me-2"></i>Chat on WhatsApp
+          </a>
+          <hr style="border-color:var(--border);margin:24px 0;">
+          <div class="d-flex align-items-center gap-2 text-muted small mb-2"><i class="bi bi-check-circle text-warning"></i> Licensed & Certified</div>
+          <div class="d-flex align-items-center gap-2 text-muted small mb-2"><i class="bi bi-check-circle text-warning"></i> Satisfaction Guaranteed</div>
+          <div class="d-flex align-items-center gap-2 text-muted small"><i class="bi bi-check-circle text-warning"></i> Free Consultation</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if related %}
+<section style="padding:0 0 80px;">
+  <div class="container">
+    <h3 style="font-family:var(--font-display);color:#fff;margin-bottom:30px;letter-spacing:0.05em;">Related Services</h3>
+    <div class="row g-4">
+      {% for s in related %}
+      <div class="col-md-4">
+        <div class="service-card">
+          <div class="service-icon-wrap"><i class="bi {{ s.icon }}"></i></div>
+          <div class="service-name">{{ s.name }}</div>
+          <p class="service-desc">{{ s.short_description }}</p>
+          <a href="{% url 'service_detail' s.slug %}" style="color:var(--primary);text-decoration:none;font-size:0.85rem;font-weight:600;">Learn More →</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}
