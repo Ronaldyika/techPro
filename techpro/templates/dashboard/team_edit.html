@@ -1,0 +1,76 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block title %}Edit Team Member{% endblock %}
+{% block page_title %}Edit Team Member{% endblock %}
+{% block nav_team %}active{% endblock %}
+
+{% block content %}
+<div class="card-dark p-4">
+  <h5 style="font-family:var(--font-display);color:#fff;letter-spacing:0.06em;margin-bottom:18px;">Edit {{ member.name }}</h5>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% if form.errors %}
+    <div class="alert alert-danger">
+      Please correct the highlighted fields before saving.
+    </div>
+    {% endif %}
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label text-light">Full Name</label>
+        {{ form.name }}
+      </div>
+      <div class="col-md-6">
+        <label class="form-label text-light">Role</label>
+        {{ form.role }}
+      </div>
+      <div class="col-md-6">
+        <label class="form-label text-light">Email</label>
+        {{ form.email }}
+      </div>
+      <div class="col-md-6">
+        <label class="form-label text-light">Photo</label>
+        {{ form.photo }}
+      </div>
+      <div class="col-md-4">
+        <label class="form-label text-light">LinkedIn</label>
+        {{ form.linkedin }}
+      </div>
+      <div class="col-md-4">
+        <label class="form-label text-light">Facebook</label>
+        {{ form.facebook_url }}
+      </div>
+      <div class="col-md-4">
+        <label class="form-label text-light">Instagram</label>
+        {{ form.instagram_url }}
+      </div>
+      <div class="col-md-4">
+        <label class="form-label text-light">Twitter</label>
+        {{ form.twitter_url }}
+      </div>
+      <div class="col-md-4">
+        <label class="form-label text-light">WhatsApp</label>
+        {{ form.whatsapp_url }}
+      </div>
+      <div class="col-12">
+        <label class="form-label text-light">Bio</label>
+        {{ form.bio }}
+      </div>
+      <div class="col-md-4">
+        <label class="form-label text-light">Order</label>
+        {{ form.order }}
+      </div>
+      <div class="col-md-4">
+        <label class="form-label text-light">Active</label>
+        <div class="form-check form-switch mt-2">
+          {{ form.is_active }}
+          <label class="form-check-label text-muted">Show on public pages</label>
+        </div>
+      </div>
+      <div class="col-12 text-end">
+        <button type="submit" class="btn-glow">Save Changes</button>
+        <a href="{% url 'dashboard_team' %}" class="btn btn-outline-secondary">Cancel</a>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -5,6 +5,8 @@ from .models import SiteSettings
 def site_settings(request):
     site = SiteSettings.get_settings()
     return {
+        'COMPANY_NAME': site.company_name,
+        'COMPANY_TAGLINE': site.tagline,
         'COMPANY_WHATSAPP': site.whatsapp or getattr(settings, 'COMPANY_WHATSAPP', '+237690000000'),
         'COMPANY_EMAIL': site.email or getattr(settings, 'COMPANY_EMAIL', 'info@techpro.com'),
         'COMPANY_PHONE': site.phone or getattr(settings, 'COMPANY_PHONE', '+237690000000'),

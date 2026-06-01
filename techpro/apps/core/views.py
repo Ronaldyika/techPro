@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from apps.core.models import SiteSettings, TeamMember
+from apps.core.models import SiteSettings, TeamMember, HomepageBanner, CoreValue
 from apps.services.models import Service
 from apps.services.views import DEFAULT_SERVICES
 from apps.projects.models import Project
@@ -13,6 +13,9 @@ def home(request):
     projects = Project.objects.filter(is_featured=True)[:6]
     reviews = Review.objects.filter(is_approved=True)[:6]
     recent_posts = BlogPost.objects.filter(status='published')[:3]
+    team = TeamMember.objects.filter(is_active=True)[:6]
+    banners = HomepageBanner.objects.filter(is_active=True).order_by('order')[:3]
+    values = CoreValue.objects.filter(is_active=True).order_by('order')[:4]
     context = {
         'site': settings_obj,
         'services': services,
@@ -20,6 +23,9 @@ def home(request):
         'reviews': reviews,
         'recent_posts': recent_posts,
         'default_services': DEFAULT_SERVICES,
+        'team': team,
+        'banners': banners,
+        'values': values,
     }
     return render(request, 'core/home.html', context)
 

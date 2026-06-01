@@ -17,7 +17,13 @@ class SiteSettings(models.Model):
     projects_completed = models.PositiveIntegerField(default=500)
     happy_clients = models.PositiveIntegerField(default=300)
     team_members = models.PositiveIntegerField(default=25)
-    about_text = models.TextField(blank=True)
+    hero_heading = models.CharField(max_length=255, default='Reliable Engineering and Solar Energy')
+    hero_subtitle = models.CharField(max_length=350, default='We are a Bamenda-based engineering and electrical solutions company committed to delivering reliable, high-quality, and innovative services. Through professionalism, technical expertise, and customer-centered solutions, we continue to build trust and satisfaction while growing our presence across the region.')
+    hero_cta_text = models.CharField(max_length=120, default='Request a Free Quote')
+    hero_cta_url = models.CharField(max_length=255, default='/contact/')
+    about_text = models.TextField(blank=True, default='We deliver reliable solar, electrical, security, and construction support solutions from our Bamenda base.')
+    about_heading = models.CharField(max_length=200, default='Building Reliable Energy and Electrical Infrastructure')
+    values_intro = models.TextField(blank=True, default='Our values reflect our promise to deliver reliable solutions, professional workmanship, and customer-focused outcomes on every project.')
     mission_text = models.TextField(blank=True)
     vision_text = models.TextField(blank=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -49,6 +55,7 @@ class TeamMember(models.Model):
     facebook_url = models.URLField(blank=True)
     twitter_url = models.URLField(blank=True)
     instagram_url = models.URLField(blank=True)
+    whatsapp_url = models.URLField(blank=True)
     order = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -58,3 +65,39 @@ class TeamMember(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.role}"
+
+
+class HomepageBanner(models.Model):
+    title = models.CharField(max_length=200)
+    subtitle = models.CharField(max_length=350, blank=True)
+    image = models.ImageField(upload_to='banners/')
+    button_text = models.CharField(max_length=120, default='Request a Quote')
+    button_url = models.CharField(max_length=255, default='/contact/')
+    order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['order', 'created_at']
+        verbose_name = 'Homepage Banner'
+        verbose_name_plural = 'Homepage Banners'
+
+    def __str__(self):
+        return self.title
+
+
+class CoreValue(models.Model):
+    title = models.CharField(max_length=150)
+    description = models.TextField(blank=True)
+    icon = models.CharField(max_length=100, default='bi-patch-check-fill')
+    order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['order', 'created_at']
+        verbose_name = 'Core Value'
+        verbose_name_plural = 'Core Values'
+
+    def __str__(self):
+        return self.title

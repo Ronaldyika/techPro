@@ -28,18 +28,28 @@
       {% for service in services %}
       <div class="col-md-6 col-lg-4 service-item" data-category="{{ service.category.slug|default:'uncategorized' }}" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'0' }}00">
         <div class="service-card h-100">
-          {% if service.image %}
+          {% if service.display_image %}
           <div class="service-card-media">
-            <img src="{{ service.image.url }}" alt="{{ service.name }}" />
+            {% if service.display_image_static %}
+            <img src="{% static service.display_image %}" alt="{{ service.name }}" />
+            {% else %}
+            <img src="{{ service.display_image }}" alt="{{ service.name }}" />
+            {% endif %}
+            <div class="service-card-overlay">
+              <div class="service-card-label">{{ service.name }}</div>
+            </div>
+          </div>
+          <div class="service-icon-wrap service-icon-overlay">
+            <i class="bi {{ service.icon }}"></i>
           </div>
           {% else %}
           <div class="service-card-media service-media-placeholder">
             <i class="bi {{ service.icon }}"></i>
           </div>
-          {% endif %}
           <div class="service-icon-wrap">
             <i class="bi {{ service.icon }}"></i>
           </div>
+          {% endif %}
           <div class="service-name">{{ service.name }}</div>
           <p class="service-desc">{{ service.short_description }}</p>
           {% if service.price_from %}
@@ -56,8 +66,11 @@
       {% for s in default_services %}
       <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
         <div class="service-card h-100">
-          <div class="service-card-media service-media-placeholder">
-            <i class="bi {{ s.icon }}"></i>
+          <div class="service-card-media">
+            <img src="{% static s.image_url %}" alt="{{ s.name }}" />
+            <div class="service-card-overlay">
+              <div class="service-card-label">{{ s.name }}</div>
+            </div>
           </div>
           <div class="service-icon-wrap">
             <i class="bi {{ s.icon }}"></i>
@@ -91,6 +104,14 @@
 <style>
 .btn-filter { background:transparent; border:1px solid var(--border); color:var(--text-muted); padding:8px 20px; border-radius:50px; font-size:0.82rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; transition:all 0.25s; }
 .btn-filter:hover,.btn-filter.active { background:var(--primary); border-color:var(--primary); color:#fff; }
+.service-card-media { position:relative; min-height:220px; overflow:hidden; border-radius:20px; }
+.service-card-media img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s ease; }
+.service-card-media:hover img { transform:scale(1.05); }
+.service-card-overlay { position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.65) 100%); display:flex; align-items:flex-end; padding:18px; }
+.service-card-label { color:#fff; font-weight:700; font-size:1.05rem; text-shadow:0 10px 30px rgba(0,0,0,0.3); }
+.service-media-placeholder { display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.85); font-size:3rem; min-height:220px; background:linear-gradient(135deg, rgba(255,255,255,0.04), rgba(230,126,34,0.08)); }
+.service-card .service-icon-wrap { margin-top:-28px; z-index:2; }
+.service-card h-100 { position:relative; }
 </style>
 {% endblock %}
 

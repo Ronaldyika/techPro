@@ -9,33 +9,41 @@ DEFAULT_SERVICES = [
         'name': 'Solar Installation',
         'short_description': 'Complete solar energy systems for homes and businesses. Grid-tied, off-grid, and hybrid solutions with quality panels and batteries.',
         'icon': 'bi-sun-fill',
+        'image_url': 'images/solar_installation.jpg',
     },
     {
         'name': 'Electrical Wiring',
         'short_description': 'Safe and code-compliant residential and commercial electrical wiring by certified electricians.',
         'icon': 'bi-plug-fill',
+        'image_url': 'images/electrical_wiring.jpg',
+    },
+    {
+        'name': 'Rod Construction',
+        'short_description': 'Contract rod construction and reinforcement work for foundations, columns, and structural supports.',
+        'icon': 'bi-hammer',
+        'image_url': 'images/rod_construction.jpg',
     },
     {
         'name': 'CCTV Security',
         'short_description': 'Full CCTV surveillance system design, supply, installation, and maintenance for homes and businesses.',
         'icon': 'bi-camera-video-fill',
-    },
-    {
-        'name': 'Wireless Networks',
-        'short_description': 'Enterprise-grade wireless network design and deployment. Fast, secure, and scalable for any environment.',
-        'icon': 'bi-wifi',
+        'image_url': 'images/CCTV_camera.jpg',
     },
     {
         'name': 'Smart Home',
         'short_description': 'Smart lighting, automated security, climate control, and integrated IoT systems for modern living.',
         'icon': 'bi-house-gear-fill',
-    },
-    {
-        'name': 'Industrial Electrical',
-        'short_description': 'High-capacity industrial electrical systems, motor controls, panel boards, and industrial automation.',
-        'icon': 'bi-lightning-charge-fill',
+        'image_url': 'images/smart_home.jpg',
     },
 ]
+
+SERVICE_IMAGE_URLS = {
+    'Solar Installation': 'images/solar_installation.jpg',
+    'Electrical Wiring': 'images/electrical_wiring.jpg',
+    'Rod Construction': 'images/rod_construction.jpg',
+    'CCTV Security': 'images/CCTV_camera.jpg',
+    'Smart Home': 'images/smart_home.jpg',
+}
 
 
 class ServiceViewSet(viewsets.ModelViewSet):
@@ -58,7 +66,15 @@ class ServiceCategoryViewSet(viewsets.ModelViewSet):
 
 
 def services_page(request):
-    services = Service.objects.filter(is_active=True)
+    excluded_services = ['Wireless Networks', 'Industrial Electrical']
+    services = list(Service.objects.filter(is_active=True).exclude(name__in=excluded_services))
+    for service in services:
+        if service.image:
+            service.display_image = service.image.url
+            service.display_image_static = False
+        else:
+            service.display_image = SERVICE_IMAGE_URLS.get(service.name)
+            service.display_image_static = True
     categories = ServiceCategory.objects.all()
     return render(request, 'services/services.html', {'services': services, 'categories': categories, 'default_services': DEFAULT_SERVICES})
 

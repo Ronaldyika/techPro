@@ -6,7 +6,7 @@
 {% block content %}
 
 <!-- HERO SECTION -->
-<section class="hero-section">
+<section class="hero-section" {% if banners %}style="background-image:url('{{ banners.0.image.url }}'); background-size:cover; background-position:center;"{% endif %}>
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
   <div class="hero-glow"></div>
@@ -14,27 +14,23 @@
     <div class="row align-items-center g-5">
       <div class="col-lg-7 hero-content">
         <p class="hero-eyebrow">⚡ Bamenda, Cameroon</p>
-        <h1 class="hero-title">
-          PRECISION<br>
-          <span>ENGINEERING</span><br>
-          SOLUTIONS
-        </h1>
-        <p class="hero-subtitle">Solar installation, electrical systems, CCTV security, network infrastructure, and smart home solutions. Built to last. Engineered to perform.</p>
+        <h1 class="hero-title">{{ site.hero_heading }}</h1>
+        <p class="hero-subtitle">{{ site.hero_subtitle }}</p>
         <div class="d-flex flex-wrap gap-3">
           <a href="{% url 'services' %}" class="btn-glow">Explore Services</a>
-          <a href="{% url 'contact' %}" class="btn-outline-custom">Get Free Quote</a>
+          <a href="{{ site.hero_cta_url }}" class="btn-outline-custom">{{ site.hero_cta_text }}</a>
         </div>
         <div class="hero-stats">
           <div>
-            <div class="hero-stat-num">10+</div>
+            <div class="hero-stat-num">{{ site.years_experience }}+</div>
             <div class="hero-stat-label">Years Experience</div>
           </div>
           <div>
-            <div class="hero-stat-num">500+</div>
-            <div class="hero-stat-label">Projects Done</div>
+            <div class="hero-stat-num">{{ site.projects_completed }}+</div>
+            <div class="hero-stat-label">Projects Completed</div>
           </div>
           <div>
-            <div class="hero-stat-num">300+</div>
+            <div class="hero-stat-num">{{ site.happy_clients }}+</div>
             <div class="hero-stat-label">Happy Clients</div>
           </div>
         </div>
@@ -121,6 +117,89 @@
   </div>
 </section>
 
+<!-- ABOUT COMPANY -->
+<section class="py-6 bg-dark-2">
+  <div class="container">
+    <div class="row g-5 align-items-center">
+      <div class="col-lg-6" data-aos="fade-right">
+        <span class="section-badge">About Us</span>
+        <h2 class="section-title">{{ site.about_heading }}</h2>
+        <div class="section-divider"></div>
+        <p class="text-muted">{{ site.about_text }}</p>
+        <div class="row g-3 mt-4">
+          <div class="col-12">
+            <div class="card-dark p-4">
+              <h5 style="font-family:var(--font-display);color:#fff;letter-spacing:0.05em;">Our Mission</h5>
+              <p class="text-muted small mb-0">Deliver reliable, high-quality engineering and electrical solutions that empower clients across Bamenda and beyond.</p>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="card-dark p-4">
+              <p class="text-muted small mb-1"><strong>Trusted Excellence</strong></p>
+              <p class="text-muted small">Quality workmanship and customer-first service on every project.</p>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="card-dark p-4">
+              <p class="text-muted small mb-1"><strong>Customer Satisfaction</strong></p>
+              <p class="text-muted small">We build trust through dependable delivery and honest guidance.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6" data-aos="fade-left">
+        <div class="card-dark p-4">
+          <h5 style="font-family:var(--font-display);color:#fff;letter-spacing:0.05em;">Our Growth Story</h5>
+          <p class="text-muted small">Starting in Bamenda, we have expanded our engineering services to support solar installations, electrical repairs, CCTV security, and construction support across the region.</p>
+          <ul class="text-muted" style="list-style:none;padding-left:0;margin-top:24px;">
+            <li class="mb-3"><i class="bi bi-check2-circle text-warning me-2"></i>Reliable solar energy and electrical systems.</li>
+            <li class="mb-3"><i class="bi bi-check2-circle text-warning me-2"></i>Professional troubleshooting and maintenance.</li>
+            <li class="mb-3"><i class="bi bi-check2-circle text-warning me-2"></i>Secure installations for homes and businesses.</li>
+            <li class="mb-3"><i class="bi bi-check2-circle text-warning me-2"></i>Construction support with rod tying and iron bending expertise.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CORE TEAM -->
+<section class="py-6">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <span class="section-badge">Our Team</span>
+      <h2 class="section-title">Meet Our Core Team</h2>
+      <div class="section-divider center"></div>
+      <p class="text-muted" style="max-width:640px;margin:0 auto;">Experienced professionals with strong technical skills in engineering, solar energy, electrical systems, and construction support.</p>
+    </div>
+    <div class="row g-4">
+      {% for member in team %}
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+        <div class="service-card">
+          <div class="team-photo" style="min-height:260px; overflow:hidden; border-radius:var(--radius); margin-bottom:22px; background:linear-gradient(135deg,rgba(255,255,255,0.04),rgba(230,126,34,0.08)); display:flex; align-items:center; justify-content:center;">
+            {% if member.photo %}
+            <img src="{{ member.photo.url }}" alt="{{ member.name }}" style="width:100%; height:100%; object-fit:cover;" />
+            {% else %}
+            <i class="bi bi-person-circle" style="font-size:4rem;color:rgba(255,255,255,0.5);"></i>
+            {% endif %}
+          </div>
+          <h5 class="service-name" style="margin-bottom:6px;">{{ member.name }}</h5>
+          <div class="text-muted small mb-3">{{ member.role }}</div>
+          <p class="service-desc">{{ member.bio|truncatewords:25 }}</p>
+          <div class="team-social-links mt-3">
+            {% if member.facebook_url %}<a href="{{ member.facebook_url }}" target="_blank" rel="noreferrer"><i class="bi bi-facebook"></i></a>{% endif %}
+            {% if member.linkedin %}<a href="{{ member.linkedin }}" target="_blank" rel="noreferrer"><i class="bi bi-linkedin"></i></a>{% endif %}
+            {% if member.instagram_url %}<a href="{{ member.instagram_url }}" target="_blank" rel="noreferrer"><i class="bi bi-instagram"></i></a>{% endif %}
+            {% if member.twitter_url %}<a href="{{ member.twitter_url }}" target="_blank" rel="noreferrer"><i class="bi bi-twitter"></i></a>{% endif %}
+            {% if member.whatsapp_url %}<a href="{{ member.whatsapp_url }}" target="_blank" rel="noreferrer"><i class="bi bi-whatsapp"></i></a>{% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
 <!-- STATS SECTION -->
 <section class="stats-section py-5">
   <div class="container">
@@ -191,34 +270,46 @@
         <span class="section-badge">Why TechPro</span>
         <h2 class="section-title">Engineered for Excellence</h2>
         <div class="section-divider"></div>
-        <p class="text-muted mb-4">We combine deep technical expertise with a commitment to delivering reliable, cost-effective engineering solutions that stand the test of time.</p>
+        <p class="text-muted mb-4">{{ site.values_intro }}</p>
         <a href="{% url 'about' %}" class="btn-glow" style="padding:12px 28px;font-size:0.95rem;">About Our Team</a>
       </div>
       <div class="col-lg-7" data-aos="fade-left">
         <div class="row g-3">
-          {% for item in "1234" %}
-          <div class="col-sm-6">
-            <div class="card-dark p-4">
-              {% if forloop.counter == 1 %}
-              <i class="bi bi-patch-check-fill fs-3 text-warning mb-3 d-block"></i>
-              <h5 style="font-family:var(--font-display);color:#fff;letter-spacing:0.05em;">Quality Guaranteed</h5>
-              <p class="text-muted small mb-0">Every project is backed by our quality guarantee and professional warranty.</p>
-              {% elif forloop.counter == 2 %}
-              <i class="bi bi-clock-fill fs-3 text-warning mb-3 d-block"></i>
-              <h5 style="font-family:var(--font-display);color:#fff;letter-spacing:0.05em;">On-Time Delivery</h5>
-              <p class="text-muted small mb-0">We respect your timeline and consistently deliver projects on schedule.</p>
-              {% elif forloop.counter == 3 %}
-              <i class="bi bi-people-fill fs-3 text-warning mb-3 d-block"></i>
-              <h5 style="font-family:var(--font-display);color:#fff;letter-spacing:0.05em;">Expert Team</h5>
-              <p class="text-muted small mb-0">Certified engineers with years of hands-on experience in all domains.</p>
-              {% else %}
-              <i class="bi bi-headset fs-3 text-warning mb-3 d-block"></i>
-              <h5 style="font-family:var(--font-display);color:#fff;letter-spacing:0.05em;">24/7 Support</h5>
-              <p class="text-muted small mb-0">Round-the-clock emergency support for all our clients and installations.</p>
-              {% endif %}
+          {% if values.exists %}
+            {% for value in values %}
+            <div class="col-sm-6">
+              <div class="card-dark p-4">
+                <i class="bi {{ value.icon }} fs-3 text-warning mb-3 d-block"></i>
+                <h5 style="font-family:var(--font-display);color:#fff;letter-spacing:0.05em;">{{ value.title }}</h5>
+                <p class="text-muted small mb-0">{{ value.description }}</p>
+              </div>
             </div>
-          </div>
-          {% endfor %}
+            {% endfor %}
+          {% else %}
+            {% for item in "1234" %}
+            <div class="col-sm-6">
+              <div class="card-dark p-4">
+                {% if forloop.counter == 1 %}
+                <i class="bi bi-patch-check-fill fs-3 text-warning mb-3 d-block"></i>
+                <h5 style="font-family:var(--font-display);color:#fff;letter-spacing:0.05em;">Quality Guaranteed</h5>
+                <p class="text-muted small mb-0">Every project is backed by our quality guarantee and professional warranty.</p>
+                {% elif forloop.counter == 2 %}
+                <i class="bi bi-clock-fill fs-3 text-warning mb-3 d-block"></i>
+                <h5 style="font-family:var(--font-display);color:#fff;letter-spacing:0.05em;">On-Time Delivery</h5>
+                <p class="text-muted small mb-0">We respect your timeline and consistently deliver projects on schedule.</p>
+                {% elif forloop.counter == 3 %}
+                <i class="bi bi-people-fill fs-3 text-warning mb-3 d-block"></i>
+                <h5 style="font-family:var(--font-display);color:#fff;letter-spacing:0.05em;">Expert Team</h5>
+                <p class="text-muted small mb-0">Certified engineers with years of hands-on experience in all domains.</p>
+                {% else %}
+                <i class="bi bi-headset fs-3 text-warning mb-3 d-block"></i>
+                <h5 style="font-family:var(--font-display);color:#fff;letter-spacing:0.05em;">24/7 Support</h5>
+                <p class="text-muted small mb-0">Round-the-clock emergency support for all our clients and installations.</p>
+                {% endif %}
+              </div>
+            </div>
+            {% endfor %}
+          {% endif %}
         </div>
       </div>
     </div>

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>{% block title %}TechPro Engineering{% endblock %}</title>
-  <meta name="description" content="{% block meta_description %}Professional engineering and technical services in Cameroon{% endblock %}"/>
+  <title>{% block title %}{{ COMPANY_NAME|default:'TechPro Engineering' }}{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}{{ COMPANY_TAGLINE|default:'Professional engineering and technical services in Cameroon' }}{% endblock %}"/>
   {% load static %}
   <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
@@ -25,8 +25,8 @@
     <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'home' %}">
       <div class="brand-icon"><i class="bi bi-lightning-fill"></i></div>
       <div>
-        <span class="brand-name">TECHPRO</span>
-        <span class="brand-sub d-block">ENGINEERING</span>
+        <span class="brand-name">{{ COMPANY_NAME|default:'TECHPRO'|upper }}</span>
+        <span class="brand-sub d-block">{{ COMPANY_TAGLINE|default:'ENGINEERING' }}</span>
       </div>
     </a>
     <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
@@ -71,8 +71,8 @@
     <div class="row g-4 py-5">
       <div class="col-lg-4">
         <div class="footer-brand mb-3">
-          <span class="brand-name">TECHPRO</span>
-          <span class="ms-1 text-warning">ENGINEERING</span>
+          <span class="brand-name">{{ COMPANY_NAME|default:'TECHPRO'|upper }}</span>
+          <span class="ms-1 text-warning">{{ COMPANY_TAGLINE|default:'ENGINEERING' }}</span>
         </div>
         <p class="text-muted small">Powering the future with precision engineering. Solar, electrical, security, and smart infrastructure solutions across Cameroon.</p>
         <div class="social-links mt-3">

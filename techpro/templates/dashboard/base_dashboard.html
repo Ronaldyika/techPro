@@ -44,8 +44,9 @@
     <a href="{% url 'dashboard_blog' %}" class="sidebar-nav-link {% block nav_blog %}{% endblock %}"><i class="bi bi-newspaper"></i> Blog</a>
 
     <div class="sidebar-section-label">Manage</div>
+    <a href="{% url 'dashboard_team' %}" class="sidebar-nav-link {% block nav_team %}{% endblock %}"><i class="bi bi-people-fill"></i> Team</a>
     <a href="{% url 'dashboard_services' %}" class="sidebar-nav-link {% block nav_services %}{% endblock %}"><i class="bi bi-tools"></i> Services</a>
-    <a href="{% url 'dashboard_settings' %}" class="sidebar-nav-link {% block nav_settings %}{% endblock %}"><i class="bi bi-gear-fill"></i> Settings</a>
+    <a href="{% url 'dashboard_settings' %}" class="sidebar-nav-link {% block nav_settings %}{% endblock %}"><i class="bi bi-gear-fill"></i> Content</a>
 
     <div style="margin-top:auto;padding-top:20px;">
       <a href="{% url 'dashboard_logout' %}" class="sidebar-nav-link" style="color:#e74c3c;"><i class="bi bi-box-arrow-left"></i> Logout</a>

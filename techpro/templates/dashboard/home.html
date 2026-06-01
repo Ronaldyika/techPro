@@ -16,12 +16,11 @@
   <div class="col-sm-6 col-xl-3">
     <div class="dash-stat-card d-flex justify-content-between align-items-start">
       <div>
-        <div class="dash-stat-num">{{ stats.total_inquiries }}</div>
-        <div class="dash-stat-label">Total Inquiries</div>
-        {% if stats.new_inquiries %}<span class="status-badge status-new mt-2 d-inline-block">{{ stats.new_inquiries }} new</span>{% endif %}
+        <div class="dash-stat-num">{{ stats.total_team_members }}</div>
+        <div class="dash-stat-label">Team Members</div>
       </div>
       <div style="width:48px;height:48px;background:rgba(230,126,34,0.1);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:var(--primary);">
-        <i class="bi bi-inbox"></i>
+        <i class="bi bi-people-fill"></i>
       </div>
     </div>
   </div>
@@ -40,12 +39,11 @@
   <div class="col-sm-6 col-xl-3">
     <div class="dash-stat-card d-flex justify-content-between align-items-start">
       <div>
-        <div class="dash-stat-num">{{ stats.total_projects }}</div>
-        <div class="dash-stat-label">Projects</div>
-        <span class="status-badge status-replied mt-2 d-inline-block">{{ stats.total_services }} services</span>
+        <div class="dash-stat-num">{{ stats.approved_reviews }}</div>
+        <div class="dash-stat-label">Approved Reviews</div>
       </div>
       <div style="width:48px;height:48px;background:rgba(230,126,34,0.1);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:var(--primary);">
-        <i class="bi bi-folder2"></i>
+        <i class="bi bi-check-circle"></i>
       </div>
     </div>
   </div>
